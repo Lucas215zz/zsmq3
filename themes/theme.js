@@ -1,5 +1,4 @@
 import BLOG, { LAYOUT_MAPPINGS } from '@/blog.config'
-import * as ThemeComponents from '@theme-components'
 import getConfig from 'next/config'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
@@ -7,6 +6,11 @@ import { getQueryParam, getQueryVariable, isBrowser } from '../lib/utils'
 
 // 在next.config.js中扫描所有主题
 export const { THEMES = [] } = getConfig()?.publicRuntimeConfig || {}
+
+// 直接使用路径导入默认主题，避免构建时别名解析问题
+// 注意：这里使用 require 而不是 import，因为需要在运行时动态解析
+// webpack 会在构建时处理这个 require 调用
+const ThemeComponents = require(`@/themes/${BLOG.THEME}`)
 
 /**
  * 获取主题配置

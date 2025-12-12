@@ -275,14 +275,15 @@ const nextConfig = {
     // 动态主题：添加 resolve.alias 配置，将动态路径映射到实际路径
     config.resolve.alias['@'] = path.resolve(__dirname)
 
+    const themePath = path.resolve(__dirname, 'themes', THEME)
     if (!isServer) {
-      console.log('[默认主题]', path.resolve(__dirname, 'themes', THEME))
+      console.log('[默认主题]', themePath)
     }
-    config.resolve.alias['@theme-components'] = path.resolve(
-      __dirname,
-      'themes',
-      THEME
-    )
+    // 确保别名指向主题目录，webpack 会自动解析 index.js
+    config.resolve.alias['@theme-components'] = themePath
+    
+    // 确保 webpack 能够正确解析目录导入
+    config.resolve.mainFiles = ['index', 'index.js', 'index.jsx']
 
     // 性能优化配置
     if (!dev) {
